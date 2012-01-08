@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -119,7 +120,6 @@ public class SQLImporter
                         try
                         {
                             Field[] fields = instruction.getNames();
-                            // System.out.println(line);
                             int nrOfFields = fields.length;
                             final HashMap<String, Object> record = new HashMap<String, Object>();
                             for ( int k = 0; k < nrOfFields; k++ )
@@ -520,4 +520,126 @@ public class SQLImporter
         // shutdown();
 
     }
+    
+    private void parseValues(final ImportInstruction instruction, String str, Integer nodeCount) throws Exception{
+        final String[] values = instruction.parseValue(str);
+        Field[] fields = instruction.getNames();
+        int nrOfFields = fields.length;
+        final HashMap<String, Object> record = new HashMap<String, Object>();
+ //     final List<Map<String, Object>> records = new LinkedList<Map<String, Object>>();
+        for (int k = 0; k < nrOfFields; k++) {
+            	if(fields[k] == null)
+            		continue;
+        		String nextToken = values[k];
+
+                // integers
+                Type type = fields[k].type;
+                if ((type == Type.INTEGER || type == Type.INTEGER_AS_STRING)
+                                && !nextToken.equals("''")) {
+                        try {
+                                int value = Integer.parseInt(nextToken.trim());
+                                record.put(fields[k].name, value);
+                        } catch (Exception e) {
+                                System.out.print(e);
+                        }
+                }
+
+                else if (type == Type.STRING) {
+                		if(nextToken != null && nextToken.startsWith("'"))
+                			nextToken.substring(1, nextToken.length() - 1);
+                        record.put(fields[k].name, nextToken);
+                }
+
+                else if (type == Type.LONG && !nextToken.equals("''")) {
+                        try {
+                                long value = Long.parseLong(nextToken.trim());
+                                record.put(fields[k].name, value);
+                        } catch (Exception e) {
+                                System.out.print(e);
+                        }
+                }
+        }
+        nodecount = nodecount + 1;
+        instruction.createData(neo, indexProvider, record);
+    }
+
+    public void startImportMultiLines( String sqlFile )
+    {
+        long start = System.currentTimeMillis();
+
+        neo = new BatchInserterImpl( STORE_DIR );
+        indexProvider = new LuceneBatchInserterIndexProvider( neo );
+        Integer nodecount = new Integer(0);
+        try
+        {
+
+
+            BufferedReader br = new BufferedReader( new FileReader( sqlFile ) );
+
+            // replace ,NULL, with ,'',
+            int i = 0;
+            int j = 0;
+            String line = br.readLine();
+            while ( line != null )
+            {
+//                if ( line.contains( "NULL" ) )
+//                {
+//                    line = line.replaceAll( "NULL", "''" );
+//                    line = line.replaceAll( "''''", "'" );
+//                }
+                for ( final ImportInstruction instruction : instructions )
+                {
+                    // first, see to the line start
+                    if ( line !=null && line.startsWith( instruction.getStatementStart() ) )
+                    {
+                        int length = instruction.getStatementStart().length();
+                        String substring = line.substring( length );
+                        String[] array = substring.split("\\),");
+                        System.out.println(array.length);
+                        if(array != null) {
+                                for(String valueStr : array) {
+                                        try {
+                                                parseValues(instruction, valueStr, nodecount);
+                                        } catch (Exception e) {
+                                                System.out.print(e);
+                                        }
+//                                if ( nodecount - 1000 == oldcount )
+//                                {
+//                                	System.out.println( "." );
+//                                    oldcount = nodecount;
+//                                }
+                                }
+                        }
+                        System.out.println("instruction" + instruction.getStatementStart());
+                        ++j;
+                    }
+                    
+                    
+                }
+                line = br.readLine();
+                ++i;
+            }
+            System.out.println("row count:" + i);
+            System.out.println("effective row count:" + j);
+            br.close();
+        }
+        catch ( FileNotFoundException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+        System.out.println( "submitted " + nodecount + "nodes in "
+                            + ( System.currentTimeMillis() - start ) / 1000
+                            + "s" );
+        // optimizeIndex();
+        startLinking();
+        // neo.shutdown();
+
+    }
+
+    
+
 }

@@ -23,7 +23,7 @@ public class TableImportInstruction extends ImportInstruction
             String tableName, Field[] names, Map<Field, String> indexes,
             Map<Field, String> foreignKeys, boolean createSubrefNodes )
     {
-        super( names, "INSERT INTO \"" + tableName + "\" VALUES" );
+        super( names, "INSERT INTO " + tableName + " VALUES" );
         this.aggregationNodeName = aggregationNodeName;
         this.indexes = indexes;
         this.foreignKeys = foreignKeys;
@@ -70,7 +70,7 @@ public class TableImportInstruction extends ImportInstruction
                 String indexName = indexes.get( indexField );
                 indexProvider.nodeIndex( indexName,
                         MapUtil.stringMap( "type", "exact" ) ).add( nodeId,
-                        MapUtil.map( indexName, values.get( indexField.name ) ) );
+                        MapUtil.map( indexField.name, values.get( indexField.name ) ) );
             }
             catch ( NumberFormatException nfe )
             {

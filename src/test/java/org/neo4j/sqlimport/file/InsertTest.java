@@ -103,7 +103,7 @@ public class InsertTest
     {
         Field[] fields = { FIELD_ID, AUTHOR_ID_FIELD, BOOK_ID_FIELD };
         importer.addImportInstruction( new ForeignKeyInstruction( fields, "Authorship",
-                AUTHOR_ID_FIELD, AUTHOR_ID, BOOK_ID_FIELD, BOOK_ID,
+                AUTHOR_ID_FIELD, AUTHOR_ID, BOOK_ID_FIELD, BOOK_ID, null, null,
                 TestRelationships.AUTHOR ) );
     }
 
@@ -123,7 +123,7 @@ public class InsertTest
         Field[] fields = { FIELD_ID, TAG_ID_FIELD, BOOK_ID_FIELD };
 
         importer.addImportInstruction( new ForeignKeyInstruction( fields, "tagging",
-                TAG_ID_FIELD, TAG_ID, BOOK_ID_FIELD, BOOK_ID,
+                TAG_ID_FIELD, TAG_ID, BOOK_ID_FIELD, BOOK_ID, null, null,
                 TestRelationships.TAGGING ) );
     }
 
@@ -131,7 +131,7 @@ public class InsertTest
     {
         Field[] fields = { FIELD_ID, TAG_ID_FIELD, PARENT_ID_FIELD };
         importer.addImportInstruction( new ForeignKeyInstruction( fields, "tag_hierarchy",
-                TAG_ID_FIELD, TAG_ID, PARENT_ID_FIELD, TAG_ID,
+                TAG_ID_FIELD, TAG_ID, PARENT_ID_FIELD, TAG_ID, null, null,
                 TestRelationships.PARENT_TAG ) );
     }
 
@@ -139,7 +139,7 @@ public class InsertTest
     {
         Field[] fields = { FIELD_ID, FROM_ID_FIELD, TO_ID_FIELD, DESC_FIELD };
         importer.addImportInstruction( new ForeignKeyInstruction( fields, "tag_relation",
-                FROM_ID_FIELD, TAG_ID, TO_ID_FIELD, TAG_ID,
+                FROM_ID_FIELD, TAG_ID, TO_ID_FIELD, TAG_ID, null, null,
                 TestRelationships.TAG_RELATION) );
     }
 

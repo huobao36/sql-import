@@ -71,6 +71,17 @@ public abstract class ImportInstruction
 
     }
 
+    public String[] parseValue(String string)
+    {
+    	if(string.startsWith("("))
+    		string = string.substring(1);
+    	else if(string.startsWith(" ("))
+    		string = string.substring(2);
+    	else if(string.endsWith(");"))
+    		string = string.replace(");", "");
+    	
+    	return string.split(",");
+    }
     abstract void createData( BatchInserter neo, BatchInserterIndexProvider indexProvider, HashMap<String, Object> values );
 
 }

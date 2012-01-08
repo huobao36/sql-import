@@ -11,6 +11,6 @@ public class Field {
 	}
 
 	public enum Type {
-		INTEGER, STRING, INTEGER_AS_STRING;
+		INTEGER, LONG, STRING, INTEGER_AS_STRING, LONG_AS_STRING;
 	}
 }
