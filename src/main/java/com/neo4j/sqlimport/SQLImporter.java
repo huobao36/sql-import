@@ -526,7 +526,6 @@ public class SQLImporter
         Field[] fields = instruction.getNames();
         int nrOfFields = fields.length;
         final HashMap<String, Object> record = new HashMap<String, Object>();
- //     final List<Map<String, Object>> records = new LinkedList<Map<String, Object>>();
         for (int k = 0; k < nrOfFields; k++) {
             	if(fields[k] == null)
             		continue;
@@ -540,7 +539,7 @@ public class SQLImporter
                                 int value = Integer.parseInt(nextToken.trim());
                                 record.put(fields[k].name, value);
                         } catch (Exception e) {
-                                System.out.print(e);
+                                System.out.print("parseValues " + str + " err:" + e);
                         }
                 }
 
@@ -552,10 +551,11 @@ public class SQLImporter
 
                 else if (type == Type.LONG && !nextToken.equals("''")) {
                         try {
-                                long value = Long.parseLong(nextToken.trim());
+                        	    long value = Long.parseLong(nextToken.trim());
                                 record.put(fields[k].name, value);
                         } catch (Exception e) {
-                                System.out.print(e);
+                        		
+                                System.out.println("parseValues " + str + " err:" + e);
                         }
                 }
         }
@@ -582,11 +582,11 @@ public class SQLImporter
             String line = br.readLine();
             while ( line != null )
             {
-//                if ( line.contains( "NULL" ) )
-//                {
-//                    line = line.replaceAll( "NULL", "''" );
-//                    line = line.replaceAll( "''''", "'" );
-//                }
+                if ( line.contains( "NULL" ) )
+                {
+                    line = line.replaceAll( "NULL", "''" );
+                    line = line.replaceAll( "''''", "'" );
+                }
                 for ( final ImportInstruction instruction : instructions )
                 {
                     // first, see to the line start
@@ -595,7 +595,6 @@ public class SQLImporter
                         int length = instruction.getStatementStart().length();
                         String substring = line.substring( length );
                         String[] array = substring.split("\\),");
-                        System.out.println(array.length);
                         if(array != null) {
                                 for(String valueStr : array) {
                                         try {
@@ -603,11 +602,6 @@ public class SQLImporter
                                         } catch (Exception e) {
                                                 System.out.print(e);
                                         }
-//                                if ( nodecount - 1000 == oldcount )
-//                                {
-//                                	System.out.println( "." );
-//                                    oldcount = nodecount;
-//                                }
                                 }
                         }
                         System.out.println("instruction" + instruction.getStatementStart());
