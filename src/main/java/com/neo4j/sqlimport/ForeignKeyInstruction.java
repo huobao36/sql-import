@@ -48,15 +48,13 @@ public class ForeignKeyInstruction extends ImportInstruction
     {
     	BatchInserterIndex fromindex = indexProvider.nodeIndex( fromIndexName,
                 MapUtil.stringMap( "type", "exact" ) );
-    	IndexHits<Long> fromHits = fromindex.get( fromIdKey,
-                values.get( fromIdField.name ) );
-    	long fromNodeId  = fromHits.iterator().next();
-
+    	Object fromVal = values.get( fromIdField.name ) ;
+    	Long fromNodeId = fromindex.get( fromIdKey, fromVal).getSingle();
+    	
     	BatchInserterIndex toindex = indexProvider.nodeIndex( toIndexName,
                 MapUtil.stringMap( "type", "exact" ) );
-    	IndexHits<Long> toHits = toindex.get( toIdKey,
-                values.get( toIdField.name) );
-    	long toNodeId  = toHits.iterator().next();
+    	Object toVal = values.get( toIdField.name);
+    	Long toNodeId = toindex.get( toIdKey, toVal).getSingle();
     	
         values.remove( fromIdField.name );
         values.remove( toIdField.name );

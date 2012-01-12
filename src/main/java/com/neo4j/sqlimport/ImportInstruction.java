@@ -65,7 +65,6 @@ public abstract class ImportInstruction
         catch ( Exception e )
         {
             System.out.println( "Could not parse " + substring );
-            // e.printStackTrace();
         }
         return values;
 
@@ -77,9 +76,9 @@ public abstract class ImportInstruction
     		string = string.substring(1);
     	else if(string.startsWith(" ("))
     		string = string.substring(2);
-    	else if(string.endsWith(");"))
-    		string = string.replace(");", "");
     	
+    	if(string.endsWith(");"))
+    		string = string.replace(");", "");
     	return string.split(",");
     }
     
