@@ -16,11 +16,10 @@ import com.neo4j.sqlimport.TableImportInstruction;
 
 public class MyInserterTest {
 	
-	private static final String SQL_USER = "/Users/louis36/Experiment/dump/User.sql";
-	private static final String SQL_STOCK = "/Users/louis36/Experiment/dump/stocks.sql";
-	private static final String SQL_PORTFOLIO_STOCK = "portfolio_stocks.sql";
-	private static final String SQL_USERRELATION = "Relations.sql";
-	private static final String SQL_USERSTOCK_RELATION = "/Users/louis36/Experiment/dump/user_stock_rel.sql";
+	private static final String SQL_USER = "/home/louis/experiment/xueqiu-dmp/User.sql";
+	private static final String SQL_STOCK = "/home/louis/experiment/xueqiu-dmp/Stocks.sql";
+	private static final String SQL_USERRELATION = "/home/louis/experiment/xueqiu-dmp/Relations.sql";
+	private static final String SQL_USERSTOCK_RELATION = "/home/louis/experiment/xueqiu-dmp/user_stock_rel.sql";
 	private static final Field  FIELD_ID = new LongField("id");
 	private static final Field  FILED_TARGET_ID = new LongField("targetId");
 	private static final Field  FIELD_FOLLOWINGTIME = new LongField("time");
@@ -40,8 +39,8 @@ public class MyInserterTest {
 	{
 		importUsers();
 		shutDown();
-//		importUserRelations();
-//		shutDown();
+		importUserRelations();
+		shutDown();
 		importStocks();
 		shutDown();
 		importUserStockRel();
@@ -97,8 +96,4 @@ public class MyInserterTest {
         importer.startImportMultiLines(SQL_USERSTOCK_RELATION);
 		
 	}
-	
-//	create table user_stock_rel (uid bigint(20), symbol varchar(10), follow_time bigint(20), CONSTRAINT u_stockID PRIMARY KEY(uid, symbol));
-//	insert into user_stock_rel select u.id, s.symbol, ps.create_at from User as u, portfolio_stocks as ps, stocks as s, where u.email = ps.user_id and ps.code = s.symbol;
-	
 }

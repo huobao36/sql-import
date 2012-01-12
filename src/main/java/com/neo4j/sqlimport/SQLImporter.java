@@ -521,7 +521,7 @@ public class SQLImporter
 
     }
     
-    private void parseValues(final ImportInstruction instruction, String str, Integer nodeCount) throws Exception{
+    private void parseValues(final ImportInstruction instruction, String str) throws Exception{
         final String[] values = instruction.parseValue(str);
         Field[] fields = instruction.getNames();
         int nrOfFields = fields.length;
@@ -545,7 +545,7 @@ public class SQLImporter
 
                 else if (type == Type.STRING) {
                 		if(nextToken != null && nextToken.startsWith("'"))
-                			nextToken.substring(1, nextToken.length() - 1);
+                			nextToken = nextToken.substring(1, nextToken.length() - 1);
                         record.put(fields[k].name, nextToken);
                 }
 
@@ -559,7 +559,6 @@ public class SQLImporter
                         }
                 }
         }
-        nodecount = nodecount + 1;
         instruction.createData(neo, indexProvider, record);
     }
 
@@ -572,11 +571,7 @@ public class SQLImporter
         int nodecount = 0;
         try
         {
-			
-
             BufferedReader br = new BufferedReader( new FileReader( sqlFile ) );
-
-            // replace ,NULL, with ,'',
             int i = 0;
             int j = 0;
             String line = br.readLine();
@@ -601,21 +596,16 @@ public class SQLImporter
                                                 parseValues(instruction, valueStr);
                                                 nodecount++;
                                         } catch (Exception e) {
-                                                System.out.print(e);
+                                                System.out.println(e);
                                         }
                                 }
                         }
-                        System.out.println("instruction" + instruction.getStatementStart());
                         ++j;
                     }
-                    
-                    
                 }
                 line = br.readLine();
                 ++i;
             }
-            System.out.println("row count:" + i);
-            System.out.println("effective row count:" + j);
             br.close();
         }
         catch ( FileNotFoundException e )

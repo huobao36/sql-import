@@ -49,15 +49,23 @@ public class ForeignKeyInstruction extends ImportInstruction
     	BatchInserterIndex fromindex = indexProvider.nodeIndex( fromIndexName,
                 MapUtil.stringMap( "type", "exact" ) );
     	Object fromVal = values.get( fromIdField.name ) ;
-    	Long fromNodeId = fromindex.get( fromIdKey, fromVal).getSingle();
-    	
+    	long fromNodeId = -1;
+    	try {
+    		fromNodeId = fromindex.get( fromIdKey, fromVal).getSingle();
+    	} catch (Exception e) {
+    		System.out.println(fromVal + " not found;");
+    	}
     	BatchInserterIndex toindex = indexProvider.nodeIndex( toIndexName,
                 MapUtil.stringMap( "type", "exact" ) );
     	Object toVal = values.get( toIdField.name);
-    	Long toNodeId = toindex.get( toIdKey, toVal).getSingle();
-    	
+    	long toNodeId = -1;
+    	try {
+    		toNodeId = toindex.get( toIdKey, toVal).getSingle();
+    	} catch (Exception e) {
+    		System.out.println(toVal + " not found;");
+    	}
         values.remove( fromIdField.name );
         values.remove( toIdField.name );
-        neo.createRelationship( fromNodeId, toNodeId, relationshipType, values );
+        neo.createRelationship(fromNodeId, toNodeId, relationshipType, values );
     }
 }
