@@ -16,11 +16,11 @@ import com.neo4j.sqlimport.TableImportInstruction;
 
 public class MyInserterTest {
 	
-	private static final String SQL_USER = "User.sql";
-	private static final String SQL_STOCK = "stocks.sql";
-	private static final String SQL_PORTFOLIO_STOCK = "portfolio_stocks.sql";
-	private static final String SQL_USERRELATION = "Relations.sql";
-	private static final String SQL_USERSTOCK_RELATION = "user_stock_rel.sql";
+	private static final String SQL_USER = "/home/louis/experiment/User.sql";
+	private static final String SQL_STOCK = "/home/louis/experiment/stocks.sql";
+	private static final String SQL_PORTFOLIO_STOCK = "/home/louis/experiment/portfolio_stocks.sql";
+	private static final String SQL_USERRELATION = "/home/louis/experiment/Relations.sql";
+	private static final String SQL_USERSTOCK_RELATION = "/home/louis/experiment/user_stock_rel.sql";
 	private static final Field  FIELD_ID = new LongField("id");
 	private static final Field  FILED_TARGET_ID = new LongField("targetId");
 	private static final Field  FIELD_FOLLOWINGTIME = new LongField("followingTime");

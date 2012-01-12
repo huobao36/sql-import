@@ -82,6 +82,7 @@ public abstract class ImportInstruction
     	
     	return string.split(",");
     }
+    
     abstract void createData( BatchInserter neo, BatchInserterIndexProvider indexProvider, HashMap<String, Object> values );
 
 }
